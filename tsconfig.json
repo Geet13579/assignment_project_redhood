@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/types/nav.jsx", "src/components/booking/clrusals.jsx", "src/components/ui/calendar.jsx", "src/components/ui/calendar.js", "src/components/ui/calendar.jsx", "src/components/ui/calendar.js", "src/hooks/firebaseUtil.ts", "src/hooks/use-add-booking.ts", "src/lib/time-formates.js"],
+  "exclude": ["node_modules"]
+}
