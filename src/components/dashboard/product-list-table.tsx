@@ -15,17 +15,12 @@ import ConfirmPopup from "@/lib/confirm-popup";
 
 interface Employee {
   id: string;
-  name: string;
-  mobile_number: string;
-  email_id: string;
-  designation: string;
-  branch_name: string;
-  employee_uid: string;
-  password: string;
-  code_id: string;
-  status: string;
-  updated_at: string;
-  created_at: string;
+  brand: string;
+  sku: string;
+  weight: string;
+  category: string;
+  availabilityStatus: string;
+  minimumOrderQuantity: string;
 }
 
 interface TableProps {
@@ -73,33 +68,7 @@ function TablePage({ data, tableHeading }: TableProps) {
       <Table>
         <TableHeader className="border-0 px-10">
           <TableRow className="border-0">
-            <TableHead className="w-[100px] border-0 text-center">
-              <div className="inline-flex items-center">
-                <label className="flex items-center cursor-pointer relative">
-                  <input
-                    type="checkbox"
-                    className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded border border-gray-400 checked:bg-[#5BD75B] checked:border-[#5BD75B]"
-                    id="check"
-                  />
-                  <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-3.5 w-3.5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      stroke="currentColor"
-                      strokeWidth={1}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </label>
-              </div>
-            </TableHead>
+       
 
             {tableHeading.map((heading, index) => (
               <TableHead key={index} className="text-center">
@@ -111,53 +80,21 @@ function TablePage({ data, tableHeading }: TableProps) {
         <TableBody>
           {data.map((item, index) => (
             <TableRow key={index} className="hover:bg-[#FCF5F5]">
-              <TableCell className="font-medium text-center">
-                <div className="inline-flex items-center">
-                  <label className="flex items-center cursor-pointer relative">
-                    <input
-                      type="checkbox"
-                      className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded border border-gray-400 checked:bg-[#5BD75B] checked:border-[#5BD75B]"
-                      id={`check-${item.id}`}
-                    />
-                    <span className="absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-3.5 w-3.5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        stroke="currentColor"
-                        strokeWidth={1}
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </label>
-                </div>
-              </TableCell>
+          
               <TableCell className="text-center">{item.id}</TableCell>
-              <TableCell className="text-center">{item.name}</TableCell>
-              <TableCell className="text-center">
-                {item.mobile_number}
-              </TableCell>
-              <TableCell className="text-center">{item.email_id}</TableCell>
-              <TableCell className="text-center">{item.designation}</TableCell>
-              <TableCell className="text-center">{item.branch_name}</TableCell>
-              <TableCell className="text-center">{item.employee_uid}</TableCell>
-              <TableCell className="text-center">{item.password}</TableCell>
-
+              <TableCell className="text-center">{item.brand}</TableCell>
+              <TableCell className="text-center">{item.sku}</TableCell>
+              <TableCell className="text-center">{item.weight}</TableCell>
+              <TableCell className="text-center">{item.minimumOrderQuantity}</TableCell>
+              <TableCell className="text-center">{item.category}</TableCell>
+              <TableCell className="text-center">{item.availabilityStatus}</TableCell>
+              
               <TableCell className="text-center">
                 <button
-                  className={`w-[119px] py-[6px] border-[1.6px] border-borderColor rounded-[6px] text-xs font-semibold ${getTaskColor(
-                    item.status
-                  )}`}
-                  onClick={() => handleStatus(item.id, item.status)}
+                  className="w-[119px] py-[6px] border-[1.6px] bg-blue-200 border-borderColor rounded-[6px] text-xs font-semibold"
                   type="button"
                 >
-                  {item.status}
+                  View Details
                 </button>
               </TableCell>
             </TableRow>

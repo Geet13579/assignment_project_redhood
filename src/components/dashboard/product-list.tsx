@@ -4,14 +4,13 @@ import { useTabStore } from '@/hooks/use-tabs';
 
 const TABLE_HEADINGS = [
   'S.No.',
-  "Employee Name",
-  "Mobile Number",
-  "Email",
-  "Designation",
-  "Branch Name",
-  "Login ID",
-  "Password",
-  "Status"
+  "Brand Name",
+  "sku",
+  "Weight",
+  "Minimum Order Quantity",
+  "Category",
+  "Availability Status",
+  "Action"
 ];
 
 function OverviewPage() {
