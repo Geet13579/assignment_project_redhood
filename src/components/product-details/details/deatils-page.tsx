@@ -1,7 +1,6 @@
 import {useEffect} from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTabStore } from "@/hooks/use-tabs";
-import {dataFormate, formatTime} from "@/lib/time-formates";
 
 function DeatilsPage({ product }: any) {
  
@@ -46,14 +45,11 @@ function DeatilsPage({ product }: any) {
           <div className="flex items-center gap-4">
             <div className="flex items-center">
               <button
-                className={`border-[1.5px] border-borderColor px-[30px] py-[4px] rounded-[6px] text-[13px]   ${getTaskColor(
-                  "DROPOFF"
-                )}`}
+                className={`border-[1.5px] border-borderColor px-[30px] py-[4px] rounded-[6px] text-[13px]`}
               >
               {product.brand}
               </button>
             </div>
-            {/* <Ellipsis className="border-[2px] text-borderColor border-borderColor w-[35px] h-[30px] rounded-[6px]" /> */}
           </div>
         </div>
 
@@ -120,7 +116,11 @@ function DeatilsPage({ product }: any) {
               Tags
               </div>
               <div className="text-[14px] font-medium text-[#686868]">
-                bv v 
+                {product.tags.map((tag:any,index:any)=>{
+                  return (
+                    <span>{tag}, </span>
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -149,39 +149,10 @@ function DeatilsPage({ product }: any) {
               </div>
             </div>
           </div>
-
-        <div className="h-auto mt-[30px] text-[16px] text-[#211C1C] justify-between ">
-          <h5>Notes by CRE</h5>
-          {/* <ul className="list-disc px-4 py-2"> */}
-         bnv bv
-          {/* <div dangerouslySetInnerHTML={{ __html: tasks?.note_to_driver }} /> */}
-          {/* </ul> */}
-        </div>
         
       </div>
     </div>
   );
 }
-
-const getTaskColor = (task: any) => {
-  switch (task) {
-    case "PICKUP":
-      return "bg-[#D1E8FF] font-medium";
-    case "return to sc":
-      return "bg-[#F5F5F5] font-medium";
-    case "DROPOFF":
-      return "bg-[#DFFFD6]  font-medium";
-    case "chauffeur":
-      return "bg-[#FFF6E6] font-medium";
-    case "cancelled":
-      return "bg-[#FF0B0F] text-white";
-    case "rsa":
-      return "bg-[#EADE94] text-red-800";
-    case "both":
-      return "bg-[#FFF8CC] text-yellow-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
 
 export default DeatilsPage;

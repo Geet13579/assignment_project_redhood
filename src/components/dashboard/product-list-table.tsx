@@ -1,5 +1,6 @@
-import { useLicenseStore } from "@/hooks/use-empoyee-list";
+
 import { useTabStore } from "@/hooks/use-tabs";
+import Link from "next/link";
 
 import {
   Table,
@@ -11,66 +12,60 @@ import {
 } from "@/components/ui/table";
 import { useState, useCallback } from "react";
 
-import ConfirmPopup from "@/lib/confirm-popup";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface Employee {
-  id: string;
-  brand: string;
-  sku: string;
-  weight: string;
-  category: string;
-  availabilityStatus: string;
-  minimumOrderQuantity: string;
-}
 
-interface TableProps {
-  data: Employee[];
-  tableHeading: string[];
-}
-
-function TablePage({ data, tableHeading }: TableProps) {
-  const { updateEmployee, fetchLicenses } = useLicenseStore();
+function TablePage({ data, tableHeading, limit }: any) {
   const { activeTab } = useTabStore();
-
+  const [currentPage, setCurrentPage] = useState(1);
   const [showConfirmPopup, setConfirmPopup] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; status: string } | null>(null);
-
-  const handleStatus = async (id: string, status: string) => {
-    setSelectedEmployee({ id, status });
-    setConfirmPopup(true);
-  };
 
   const handlePopupWarningClose = useCallback(() => {
     setConfirmPopup(false);
     setSelectedEmployee(null);
   }, []);
 
-  const handleConfirm = useCallback(async () => {
-    if (selectedEmployee) {
-      // Call updateEmployee with the stored ID and status
-      await updateEmployee(selectedEmployee.id, selectedEmployee.status);
-      
-      // Refresh the list based on active tab
-      if (activeTab === "Inactive User") {
-        await fetchLicenses("INACTIVE");
-      } else if (activeTab === "User List") {
-        await fetchLicenses("");
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = data.slice(startIndex, endIndex);
+
+  const nextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const prevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleDeleteProduct = async (id: any) => {
+    try {
+      const response = await fetch(`https://dummyjson.com/products/${id}`, { method: "DELETE", });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+      const data = await response.json();
+      console.log('data', data)
+      if (data.isDeleted) {
+        alert("Successfully Deleted!")
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
-    
-    // Close popup and reset selection
-    setConfirmPopup(false);
-    setSelectedEmployee(null);
-  }, [selectedEmployee, updateEmployee, fetchLicenses, activeTab]);
+  }
 
   return (
     <div>
       <Table>
         <TableHeader className="border-0 px-10">
           <TableRow className="border-0">
-       
 
-            {tableHeading.map((heading, index) => (
+
+            {tableHeading.map((heading: any, index: any) => (
               <TableHead key={index} className="text-center">
                 {heading}
               </TableHead>
@@ -78,9 +73,9 @@ function TablePage({ data, tableHeading }: TableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item, index) => (
+          {currentItems.map((item: any, index: any) => (
             <TableRow key={index} className="hover:bg-[#FCF5F5]">
-          
+
               <TableCell className="text-center">{item.id}</TableCell>
               <TableCell className="text-center">{item.brand}</TableCell>
               <TableCell className="text-center">{item.sku}</TableCell>
@@ -88,32 +83,51 @@ function TablePage({ data, tableHeading }: TableProps) {
               <TableCell className="text-center">{item.minimumOrderQuantity}</TableCell>
               <TableCell className="text-center">{item.category}</TableCell>
               <TableCell className="text-center">{item.availabilityStatus}</TableCell>
-              
-              <TableCell className="text-center">
-                <button
-                  className="w-[119px] py-[6px] border-[1.6px] bg-blue-200 border-borderColor rounded-[6px] text-xs font-semibold"
-                  type="button"
-                >
+
+              <TableCell className="text-center flex gap-3 justify-center">
+                <Link href={`product-details/${item.id}`} className={`w-[119px] py-[6px] px-5 border-[1.6px] border-borderColor rounded-[6px] text-xs font-semibold bg-[#D1E8FF] text-black text-center`}>
                   View Details
-                </button>
+                </Link>
+                <Button onClick={() => handleDeleteProduct(item.id)} className={`w-[119px] py-[6px] px-5 border-[1.6px] border-borderColor rounded-[6px] text-xs font-semibold bg-red-500 text-white text-center`}>
+                  Delete
+                </Button>
               </TableCell>
+
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      {showConfirmPopup && (
-        <ConfirmPopup
-          message="Are you sure you want to update status?"
-          onClose={handlePopupWarningClose}
-          onConfirm={handleConfirm}
-        />
-      )}
+
+
+      <div className="flex items-center justify-between px-2">
+        <div className="text-sm text-gray-500">
+          Showing {startIndex + 1} to {Math.min(endIndex, data.length)} of {data.length} entries
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={prevPage}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div className="text-sm">
+            Page {currentPage} of {totalPages}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={nextPage}
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
     </div>
+
   );
 }
 
 export default TablePage;
-
-const getTaskColor = (task: string) => {
-  return task === "ACTIVE" ? "bg-[#DFFFD6] font-medium text-[#2EBB2E]" : "";
-};

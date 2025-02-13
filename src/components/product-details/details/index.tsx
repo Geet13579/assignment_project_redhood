@@ -3,21 +3,17 @@
 import { useEffect, useState } from "react";
 import HeaderTab from "@/components/tabs/headerTabs";
 import DeatilsPage from "./deatils-page";
-import PhotosPage from "./vehicle-photos";
-import CallSMSPage from "./show-call-sms-page";
-import History from "./history-page";
-import Tickets from "./tickets";
-import Inventory from "./inventory";
+import PhotosPage from "./product-photos";
+import PriceDetail from "./price-detail";
+import ReviewDetails from "./review-details";
 import { useParams } from "next/navigation";
 import { useTabStore } from "@/hooks/use-tabs";
 
 const cardData = [
   { label: "Details", active: true, value: "Details" },
   { label: "Photos", active: true, value: "Photos" },
-  { label: "SMS/Call", active: true, value: "SMS/Call" },
-  { label: "History", active: true, value: "History" },
-  { label: "Tickets", active: true, value: "Tickets" },
-  { label: "Inventory", active: true, value: "Inventory" },
+  { label: "Price Detail", active: true, value: "Price Detail" },
+  { label: "Review Details", active: true, value: "Review Details" }
 ];
 
 const cardData1 = [{ label1: "Filter", icon: "" }];
@@ -30,7 +26,6 @@ export default function HeaderTabs() {
   const [error, setError] = useState(null);
 
 
-  // // console.log('activeTab', activeTab)
   useEffect(() => {
     const fetchOngoingTask = async () => {
       setIsLoading(true);
@@ -90,10 +85,8 @@ export default function HeaderTabs() {
         <>
           {activeTab === "Details" && <DeatilsPage product={product} />}
           {activeTab === "Photos" && <PhotosPage product={product}/>}
-          {activeTab === "SMS/Call" && <CallSMSPage product={product} />}
-          {activeTab === "History" && <History product={product}/>}
-          {activeTab === "Tickets" && <Tickets product={product} />}
-          {activeTab === "Inventory" && <Inventory />}
+          {activeTab === "Price Detail" && <PriceDetail product={product} />}
+          {activeTab === "Review Details" && <ReviewDetails product={product}/>}
         </>
       ) : (
         <div className="flex items-center justify-center p-4">

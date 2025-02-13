@@ -4,19 +4,6 @@ import { useEffect, Suspense } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
-// Dynamically import AdminPanelLayout with loading state
-const AdminPanelLayout = dynamic(() => import("@/components/admin-panel-layout"), {
-  loading: () => <div className="flex items-center justify-center h-screen">
-
-<div className="relative flex justify-center items-center">
-  <div className="absolute animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary" />
-  {/* <img src="https://www.svgrepo.com/show/509001/avatar-thinking-9.svg" className="rounded-full h-28 w-28" /> */}
-</div>
-
-  </div>,
-  ssr: false
-});
-
 
 export default function ClientLayout({
   children,
@@ -42,7 +29,7 @@ export default function ClientLayout({
 
   return (
     <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
-      <AdminPanelLayout>{children}</AdminPanelLayout>
+      {children}
     </Suspense>
   );
 }

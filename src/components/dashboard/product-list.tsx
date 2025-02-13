@@ -15,6 +15,8 @@ const TABLE_HEADINGS = [
 
 function OverviewPage() {
   const [productList, setProductList] = useState([]);
+  const [limit, setLimit] = useState([]);
+
   const [error, setError] = useState(null);
 
   const fetchProducts = async () => {
@@ -28,10 +30,10 @@ function OverviewPage() {
       const data = await response.json();
       console.log('data', data)
       setProductList(data.products);
+      setLimit(data.limit)
     } catch (error) {
       console.error('Error fetching products:', error);
-    } finally {
-    }
+    } 
   };
 
   useEffect(() => {
@@ -47,6 +49,7 @@ function OverviewPage() {
       <div className="bg-white p-5 border border-[1.5px] border-borderColor mt-5 mb-10">
         <TablePage
           data={productList}
+          limit={limit}
           tableHeading={TABLE_HEADINGS}
         />
       </div>
