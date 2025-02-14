@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect, useState } from "react";
 import TablePage from "./product-list-table";
-import { useTabStore } from '@/hooks/use-tabs';
+import { getProducts } from "@/app/action/product";
 
 const TABLE_HEADINGS = [
   'S.No.',
@@ -15,30 +17,40 @@ const TABLE_HEADINGS = [
 
 function OverviewPage() {
   const [productList, setProductList] = useState([]);
-  const [limit, setLimit] = useState([]);
-
+  const [limit, setLimit] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchProducts = async () => {
-    setError(null);
-    
-    try {
-      const response = await fetch('https://dummyjson.com/products');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log('data', data)
-      setProductList(data.products);
-      setLimit(data.limit)
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } 
-  };
-
   useEffect(() => {
-    fetchProducts();
-  }, []); // Empty dependency array since we only want to fetch once on mount
+    async function loadProducts() {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const result = await getProducts();
+        
+        if (result.error) {
+          //@ts-expect-error null
+          setError(result.error);
+        } else {
+          setProductList(result.products || []);
+          setLimit(result.limit || 0);
+        }
+      } catch (err) {
+          //@ts-expect-error null
+
+        setError("Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    loadProducts();
+  }, []);
+
+  if (loading) {
+    return <div className="p-5">Loading products...</div>;
+  }
 
   if (error) {
     return <div className="p-5 text-red-500">Error loading products: {error}</div>;

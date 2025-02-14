@@ -1,39 +1,10 @@
-"use client";
+'use client';
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from 'lucide-react';
-
-const authService = {
-  login: async (username: string, password: string) => {
-    try {
-      const response = await fetch('https://dummyjson.com/auth/login', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ 
-          username, 
-          password,
-          expiresInMins: 30 
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error("An unexpected error occurred");
-    }
-  },
-};
+import { login } from "@/app/action/auth";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -66,32 +37,21 @@ export default function LoginForm() {
     setError("");
 
     try {
-      const response = await authService.login(
-        formData.username,
-        formData.password
-      );
+      const formDataObj = new FormData();
+      formDataObj.append('username', formData.username);
+      formDataObj.append('password', formData.password);
+      
+      const result = await login(formDataObj);
 
-      console.log('response', response)
-
-      if (response.accessToken) {
-
-        localStorage.setItem("authToken", response.accessToken);
-        
-        localStorage.setItem("userData", JSON.stringify({
-          id: response.id,
-          username: response.username,
-          gender:response.gender,
-          image: response.image,
-          email: response.email,
-          firstName: response.firstName,
-          lastName: response.lastName,
-        }));
+      if (result.error) {
+        setError(result.error);
+      } else if (result.success) {
+        localStorage.setItem("userData", JSON.stringify(result.user));
         router.push("/dashboard");
-      } else {
-        throw new Error("No token received from server");
+        router.refresh(); 
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : "An error occurred during login");
+      setError("An error occurred during login");
     } finally {
       setIsLoading(false);
     }

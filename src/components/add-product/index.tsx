@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from 'react';
 import { Trash2 } from 'lucide-react';
-
+import { addProduct } from '@/app/action/product';
+import { useRouter } from 'next/navigation';
 interface Dimensions {
   width: number;
   height: number;
@@ -78,8 +79,7 @@ export default function ProductForm() {
     thumbnail: '',
     images: []
   });
-
-  const [errors, setErrors] = useState<Partial<Record<keyof ProductData, string>>>({});
+  const [error, setError] = useState<string | null>(null);
   const [newTag, setNewTag] = useState('');
   const [newReview, setNewReview] = useState<Review>({
     rating: 5,
@@ -88,7 +88,7 @@ export default function ProductForm() {
     reviewerName: '',
     reviewerEmail: ''
   });
-
+  const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -148,34 +148,34 @@ export default function ProductForm() {
     }));
   };
 
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
-        const response = await fetch('https://dummyjson.com/products/add',
-        { method: "POST", headers: {
-            "Content-Type": "application/json",
-            
-          },
-          body: JSON.stringify(formData),});
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-   
-        if(response.ok){
-            alert("Product Add Successfully!")
-            window.location.reload()
-        }
-       
-      } catch (error) {
-        console.error('Error fetching products:', error);
+    setError(null);
+
+    try {
+      //@ts-expect-error null
+      const result = await addProduct(formData);
+      
+      if (result.success) {
+        // Show success message
+        alert("Product added successfully!");
+        
+       window.location.reload();
+      } else {
+        setError(result.error || 'Failed to add product');
       }
-    // console.log(formData);
+    } catch (err) {
+      setError('An unexpected error occurred');
+      console.error(err);
+    } finally {
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white space-y-6">
         <h1 className='text-center font-bold text-2xl'>Add Product</h1>
       <div className="space-y-4">
+        <p>{error}</p>
         <h2 className="text-lg font-bold">Basic Information</h2>
         <div className="space-y-4 border p-4 rounded">
         <div className="grid grid-cols-2 gap-4">

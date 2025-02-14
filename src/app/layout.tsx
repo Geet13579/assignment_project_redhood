@@ -53,7 +53,7 @@ export default function RootLayout({
         />
         <link rel="apple-touch-icon" href="/logo192.png" />
         {/* <link rel="manifest" href="/manifest.json" /> */}
-        <title>Network Partner Interface</title>
+        <title>Product</title>
       </head>
       <body
         className={`${SatoshiBlack.variable} ${SatoshiBold.variable} ${SatoshiLight.variable} ${SatoshiMedium.variable} ${SatoshiRegular.variable} ${SatoshiVariable.variable} antialiased h-full`}

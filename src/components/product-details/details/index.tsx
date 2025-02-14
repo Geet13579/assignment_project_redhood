@@ -8,6 +8,7 @@ import PriceDetail from "./price-detail";
 import ReviewDetails from "./review-details";
 import { useParams } from "next/navigation";
 import { useTabStore } from "@/hooks/use-tabs";
+import { getProductById } from "@/app/action/product";
 
 const cardData = [
   { label: "Details", active: true, value: "Details" },
@@ -24,41 +25,30 @@ export default function HeaderTabs() {
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-
+  
   useEffect(() => {
-    const fetchOngoingTask = async () => {
+    async function loadProduct() {
+      if (!id) return;
+      
       setIsLoading(true);
       setError(null);
-
-      try {   
-        const response = await fetch(
-          `https://dummyjson.com/products/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      
+      try {
+        const result = await getProductById(id.toString());
+        
+        if ('error' in result) {
+          setError(result.error);
+        } else {
+          setProduct(result);
         }
-
-        const data = await response.json();
-        setProduct(data);
-      } catch (error) {
-        console.error("Error fetching ongoing task:", error);
-        // setError(error.message);
+      } catch (err) {
+        console.error("Error in component:", err);
       } finally {
         setIsLoading(false);
       }
-    };
-
-    if (id) {
-      fetchOngoingTask();
     }
+    
+    loadProduct();
   }, [id]);
 
   if (isLoading) {
@@ -77,7 +67,6 @@ export default function HeaderTabs() {
     );
   }
 
-  console.log('product', product)
   return (
     <div>
       <HeaderTab cardData={cardData} cardData1={cardData1} />
@@ -90,7 +79,7 @@ export default function HeaderTabs() {
         </>
       ) : (
         <div className="flex items-center justify-center p-4">
-          <div className="text-gray-600">No task data available</div>
+          <div className="text-gray-600">No product data available</div>
         </div>
       )}
     </div>

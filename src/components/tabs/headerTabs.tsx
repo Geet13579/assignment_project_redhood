@@ -1,15 +1,7 @@
 'use client'
 import { useEffect } from 'react'
 import Link from "next/link"
-import { useBookingStore } from '@/hooks/use-add-booking'
 import { useTabStore } from '@/hooks/use-tabs'
-import { useTimeSlotStore } from "@/hooks/use-time-solts";
-import SearchBar from "@/components/navbar/search-bar";
-import { useRouter } from 'next/navigation'
-
-// import { useParams } from 'next/navigation'
-import { useLicenseStore } from '@/hooks/use-empoyee-list'
-
 
 import { cn } from '@/lib/utils'
 
@@ -27,7 +19,6 @@ const Header = ({ cardData, slug }: any) => {
 
     };
 
-    console.log('activeTab', activeTab)
 
     return (
         <div >
@@ -46,7 +37,7 @@ const Header = ({ cardData, slug }: any) => {
 
                             {cardData.map((card: any, index: number) => (
                                 <Link
-                                    href={["CHAUFFEUR", "SERVICE", "RSA", "Upcoming-Booking"].includes(card.value) ? `/add-booking/${card.value}` : "#/"}
+                                    href="#/"
                                     key={index}
                                     className={cn(
                                         "group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 font-medium transition-all ease-in-out",
@@ -81,14 +72,7 @@ const Header = ({ cardData, slug }: any) => {
 
                         </div>
 
-                        {/* {cardData1.map((card, index) => (
-              <Link href="#" className=" ml-auto mr-6 hidden lg:flex items-center gap-3 border border-borderColor p-2 rounded-[6px] font-medium font-[16px] " prefetch={false}>
-                <span className="">{card.label1}</span>
-                <CarIcon className="h-6 w-6" />
-
-              </Link>
-
-            ))} */}
+            
 
 
                     </header>

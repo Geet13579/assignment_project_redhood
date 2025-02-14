@@ -17,15 +17,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 
 function TablePage({ data, tableHeading, limit }: any) {
-  const { activeTab } = useTabStore();
   const [currentPage, setCurrentPage] = useState(1);
-  const [showConfirmPopup, setConfirmPopup] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<{ id: string; status: string } | null>(null);
-
-  const handlePopupWarningClose = useCallback(() => {
-    setConfirmPopup(false);
-    setSelectedEmployee(null);
-  }, []);
 
   const itemsPerPage = 10;
 
@@ -87,6 +79,9 @@ function TablePage({ data, tableHeading, limit }: any) {
               <TableCell className="text-center flex gap-3 justify-center">
                 <Link href={`product-details/${item.id}`} className={`w-[119px] py-[6px] px-5 border-[1.6px] border-borderColor rounded-[6px] text-xs font-semibold bg-[#D1E8FF] text-black text-center`}>
                   View Details
+                </Link>
+                <Link href={`update-product/${item.id}`} className={`w-[119px] py-[6px] px-5 border-[1.6px] border-borderColor rounded-[6px] text-xs font-semibold bg-[#D1E8FF] text-black text-center`}>
+                  Edit
                 </Link>
                 <Button onClick={() => handleDeleteProduct(item.id)} className={`w-[119px] py-[6px] px-5 border-[1.6px] border-borderColor rounded-[6px] text-xs font-semibold bg-red-500 text-white text-center`}>
                   Delete

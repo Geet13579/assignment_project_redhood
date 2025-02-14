@@ -118,7 +118,7 @@ function DeatilsPage({ product }: any) {
               <div className="text-[14px] font-medium text-[#686868]">
                 {product.tags.map((tag:any,index:any)=>{
                   return (
-                    <span>{tag}, </span>
+                    <span key={index}>{tag}, </span>
                   )
                 })}
               </div>
